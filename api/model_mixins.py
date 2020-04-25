@@ -3,8 +3,8 @@ import django.utils.timezone as tz
 
 
 class AutoCreatedUpdatedMixin(models.Model):
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True, editable=False)
+    updated_at = models.DateTimeField(blank=True, null=True, editable=False)
 
     objects = models.Manager()
 
