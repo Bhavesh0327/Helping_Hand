@@ -3,14 +3,13 @@ from django.contrib.gis.db.models import PointField
 from django.contrib.auth.models import PermissionsMixin, User
 from django.contrib.auth.base_user import AbstractBaseUser
 from .managers.user_manager import UserManager
-from .model_mixins import AutoCreatedUpdatedMixin
+from .model_mixins import AutoCreatedUpdatedMixin, LocationMixin
 
 
 # Create your models here.
 
-class State(AutoCreatedUpdatedMixin):
+class State(AutoCreatedUpdatedMixin, LocationMixin):
     name = models.CharField(max_length=32)
-    location = PointField()
 
     class Meta:
         ordering = ['name']
@@ -18,10 +17,9 @@ class State(AutoCreatedUpdatedMixin):
     def __str__(self):
         return self.name
 
-class District(AutoCreatedUpdatedMixin):
+class District(AutoCreatedUpdatedMixin, LocationMixin):
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    location = PointField()
     editors = models.ManyToManyField(User, through='DistrictEditor')
 
     class Meta:
@@ -44,12 +42,11 @@ class ServiceType(AutoCreatedUpdatedMixin):
         return self.service_type
 
 
-class Service(AutoCreatedUpdatedMixin):
+class Service(AutoCreatedUpdatedMixin, LocationMixin):
     district = models.ForeignKey(District, on_delete=models.CASCADE)
     service_type = models.ForeignKey(ServiceType, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)
-    location = PointField()
     open_time = models.TimeField()
     close_time = models.TimeField()
     is_active = models.BooleanField(default=False, editable=False)

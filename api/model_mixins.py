@@ -1,5 +1,7 @@
 from django.db import models
 import django.utils.timezone as tz
+from django.contrib.gis.db.models import PointField
+from django.forms.models import model_to_dict
 
 
 class AutoCreatedUpdatedMixin(models.Model):
@@ -20,3 +22,24 @@ class AutoCreatedUpdatedMixin(models.Model):
             if not auto_updated_at_is_disabled:
                 self.updated_at = tz.now()
         super(AutoCreatedUpdatedMixin, self).save(*args, **kwargs)
+
+class LocationMixin(models.Model):
+    location = PointField()
+
+    class Meta:
+        abstract = True
+
+    @property
+    def latitude(self):
+        return self.location.y
+
+    @property
+    def longitude(self):
+        return self.location.x
+
+    def to_dict(self):
+        d = model_to_dict(self)
+        del d['location']
+        d['latitude'] = self.latitude
+        d['longitude'] = self.longitude
+        return d
