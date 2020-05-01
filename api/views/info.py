@@ -1,5 +1,10 @@
 from django.views.generic.base import View, RedirectView
 from django.forms.models import model_to_dict
+from django.contrib.gis.geos import Point
+from django.contrib.gis.db.models.functions import Distance
+from django.shortcuts import get_object_or_404
+
+from api.models import District, State
 
 class DistrictView(View):
     '''
@@ -27,7 +32,9 @@ class LocationRedirect(RedirectView):
             latitude (required)
             longitude (required)
         '''
-        return '/api/info/1'
+        ref_location = Point(float(latitude), float(longitude), srid=4326)
+        closest_district = District.objects.order_by(Distance("location", ref_location))[0]
+        return f'/api/info/{closest_district.id}/'
 
 class NameRedirect(RedirectView):
     '''
@@ -42,5 +49,7 @@ class NameRedirect(RedirectView):
             stateName (required)
             districtName (required)
         '''
-        return '/api/info/1'
+        state = get_object_or_404(State, name=stateName)
+        district = get_object_or_404(District, state=state, name=districtName)
+        return f'/api/info/{district.id}/'
 

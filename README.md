@@ -29,6 +29,10 @@ A help site for people in Trichy at this moment when Covid-19 is making it diffi
         ```
         pip3 install mysqlclient
         ```
+* Install [Geospacial Libraries](https://docs.djangoproject.com/en/3.0/ref/contrib/gis/install/geolibs/):
+    ```
+    sudo apt-get install binutils libproj-dev gdal-bin
+    ```
 
 ### Project Installation
 
