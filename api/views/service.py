@@ -75,11 +75,6 @@ class EditServiceView(View):
                     user=user,
                     changes=service
                 )
-            
-            return {
-                status: 200, 
-                message: "Success"
-            }
         except Exception as e:
             return error_response(e)
         return {}
@@ -123,11 +118,6 @@ class EditServiceView(View):
             else:
                 service.is_active = False
                 service.save()
-
-            return {
-                status: 200, 
-                message: "Success"
-            }
         except Exception as e:
             return error_response(e)
         return {}
@@ -151,10 +141,6 @@ class EditServiceView(View):
                     user=user,
                     service=service
                 )
-            return {
-                status: 200, 
-                message: "Success"
-            }
         except Exception as e:
             return error_response(e)
         return {}
