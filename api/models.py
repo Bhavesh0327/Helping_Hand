@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db.models import PointField
 from django.contrib.auth.models import PermissionsMixin, User
 from django.contrib.auth.base_user import AbstractBaseUser
 from .managers.user_manager import UserManager
@@ -9,8 +10,7 @@ from .model_mixins import AutoCreatedUpdatedMixin
 
 class State(AutoCreatedUpdatedMixin):
     name = models.CharField(max_length=32)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    location = PointField()
 
     class Meta:
         ordering = ['name']
@@ -21,8 +21,7 @@ class State(AutoCreatedUpdatedMixin):
 class District(AutoCreatedUpdatedMixin):
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    location = PointField()
     editors = models.ManyToManyField(User, through='DistrictEditor')
 
     class Meta:
@@ -50,8 +49,7 @@ class Service(AutoCreatedUpdatedMixin):
     service_type = models.ForeignKey(ServiceType, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    location = PointField()
     open_time = models.TimeField()
     close_time = models.TimeField()
     is_active = models.BooleanField(default=False, editable=False)
