@@ -1,5 +1,4 @@
 from django.views.generic.base import View, RedirectView
-from django.forms.models import model_to_dict
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
@@ -7,34 +6,31 @@ from django.shortcuts import get_object_or_404
 
 from api.models import District, State
 from api.helpers.response_helper import error_response
+from api.model_mixins.LocationMixin import to_dict
 
 class DistrictView(View):
     '''
     Gets the information regarding a certain district
     '''
 
-    def get(self, **kwargs):
+    def get(self, request, districtId):
         '''
         Parameters: 
             districtId (required)
         Returns information regarding a certain district
         '''
-        district_id = kwargs['districtId']
-        district = {}
-        services = []
-        
         try:
-            district = District.objects.get(id=district_id)
+            district = District.objects.get(id=districtId)
             services = Service.objects.filter(district=district)
             conv_services = []
             for service in services:
-                conv_services.append(model_to_dict(service))
+                conv_services.append(to_dict(service))
             services = conv_services
         except:
-            return error_response("District with the id: {} does not exist".format(district_id))
+            return error_response("District with the id: {} does not exist".format(districtId))
         
         return {
-            'district': model_to_dict(district),
+            'district': to_dict(district),
             'services': services
         }
 
